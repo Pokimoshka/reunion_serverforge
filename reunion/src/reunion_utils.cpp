@@ -141,7 +141,10 @@ bool IsValidSteamTicket(const uint8 *pvSteam2Key, size_t ucbSteam2Key) {
 	}
 
 	const size_t TicketOff = ReadSizeTUnaligned(pvSteam2Key);
-	if (TicketOff < 0 || (TicketOff + 16) > ucbSteam2Key) {
+	// TicketOff is attacker-controlled. Use subtraction instead of addition
+	// to avoid integer overflow: if TicketOff is near SIZE_MAX, (TicketOff + 16)
+	// would wrap around and bypass the bounds check, leading to an out-of-bounds read.
+	if (TicketOff > ucbSteam2Key - 16) {
 		return false;
 	}
 
