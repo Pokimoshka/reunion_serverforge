@@ -1,7 +1,7 @@
 #include "precompiled.h"
 
 CReunionPlayer **g_Players = NULL;
-std::unordered_map<uint64_t, CReunionPlayer*> g_SteamIdToPlayer;
+std::map<uint64_t, CReunionPlayer*> g_SteamIdToPlayer;
 
 CReunionPlayer::CReunionPlayer(IGameClient* cl) {
 	m_Id = cl->GetId();

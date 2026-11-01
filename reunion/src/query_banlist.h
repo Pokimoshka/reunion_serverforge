@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_set>
+#include <set>
 #include <vector>
 
 struct ban_t
@@ -22,7 +22,8 @@ public:
 
 private:
 	std::vector<ban_t> m_bans;
-	mutable std::unordered_set<uint32_t> m_bannedIPs; // O(1) lookup cache, rebuilt on mutation
+	mutable std::set<uint32_t> m_bannedIPs; // O(log n) lookup cache. Uses _Rb_tree (GLIBCXX_3.4),
+	                                        // NOT _Prime_rehash_policy (GLIBCXX_3.4.18), to keep ABI compatibility.
 	mutable bool m_dirtySet = true;
 
 	void rebuildIPSet() const;

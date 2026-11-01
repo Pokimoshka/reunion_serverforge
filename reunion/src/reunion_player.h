@@ -1,7 +1,7 @@
 #pragma once
 
 #include "reunion_shared.h"
-#include <unordered_map>
+#include <map>
 
 class CReunionPlayer
 {
@@ -59,8 +59,9 @@ private:
 
 extern CReunionPlayer **g_Players;
 
-// Fast O(1) lookup by 64-bit SteamID
-extern std::unordered_map<uint64_t, CReunionPlayer*> g_SteamIdToPlayer;
+// Fast lookup by 64-bit SteamID. Uses std::map (_Rb_tree, GLIBCXX_3.4) instead of
+// std::unordered_map to avoid the GLIBCXX_3.4.18 _Prime_rehash_policy dependency.
+extern std::map<uint64_t, CReunionPlayer*> g_SteamIdToPlayer;
 
 extern bool Reunion_Init_Players();
 extern void Reunion_Free_Players();
