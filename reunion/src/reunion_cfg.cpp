@@ -146,6 +146,8 @@ CReunionConfig* CReunionConfig::createDefault()
 	cfg->m_allowSplitPackets = false;
 	cfg->m_IDClientsLimit = 1;
 	cfg->m_bRejectSteamPending = true;
+	cfg->m_connectionFloodBanLevel = 30;
+	cfg->m_connectionFloodBanTime = 5;
 
 	cfg->m_SteamIdHashSaltLen = 0;
 
@@ -289,6 +291,8 @@ bool CReunionConfig::parseCfgParam()
 		REU_CFG_PARSE_INT("QueryFloodBanTime", m_floodBanTime, int, 0, 60);
 		REU_CFG_PARSE_BOOL("AllowSplitPackets", m_allowSplitPackets)
 		REU_CFG_PARSE_INT("IDClientsLimit", m_IDClientsLimit, int, 0, MAX_PLAYERS)
+		REU_CFG_PARSE_INT("ConnectionFloodBanLevel", m_connectionFloodBanLevel, int, 0, 8192)
+		REU_CFG_PARSE_INT("ConnectionFloodBanTime", m_connectionFloodBanTime, int, 0, 60)
 
 		REU_CFG_PARSE_STR("SteamIdHashSalt", m_SteamIdHashSalt)
 
