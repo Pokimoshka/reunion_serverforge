@@ -73,6 +73,12 @@ You'll find the reason there.
    This includes the `SmartSteamEmu3` emulator's authorization code.
    Removing it won't significantly affect server online activity since this emulator is rare among non-steam clients.
 
+* `Q` How to protect against fake-player connection floods?<br/>
+  `A` Use the `ConnectionFloodBanLevel` / `ConnectionFloodBanTime` options in `reunion.cfg`. They limit how many connections a single IP can make per minute before it gets banned (default 30 connections/minute, 5 minute ban). This blocks bots that keep reconnecting with different SteamIDs.
+
+* `Q` How to reject clients with `STEAM_ID_PENDING`?<br/>
+  `A` Set `RejectSteamPending = 1` in `reunion.cfg` (enabled by default). This always rejects clients that end up with a `STEAM_ID_PENDING` id after authorization, regardless of the `cid_SteamPending` value.
+
 </details>
 
 ## Build instructions
