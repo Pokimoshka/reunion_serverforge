@@ -1,0 +1,16 @@
+.git/
+.gitattributes
+.gitignore
+.github/
+build/
+*.log
+*.tmp
+*.bak
+*.swp
+.vs/
+.idea/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+publish/

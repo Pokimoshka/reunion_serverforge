@@ -1,0 +1,22 @@
+# =============================================================================
+# Docker Compose для сборки ReUnion под Linux и Windows
+# =============================================================================
+
+services:
+  build-linux:
+    image: reunion-build-linux
+    build:
+      context: .
+      dockerfile: Dockerfile.linux
+    volumes:
+      - ./build/output/linux:/publish:rw
+    command: sh -c "cp -r /publish/* /publish-out/ 2>/dev/null; true"
+
+  build-windows:
+    image: reunion-build-windows
+    build:
+      context: .
+      dockerfile: Dockerfile.windows
+    volumes:
+      - ./build/output/windows:/publish:rw
+    command: cmd /c "xcopy C:\publish\* C:\publish-out\ /E /I /Y 2>nul || true"

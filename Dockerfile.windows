@@ -1,0 +1,51 @@
+# =============================================================================
+# Dockerfile для кросс-компиляции ReUnion под Windows (MinGW-w64 на Linux)
+# Создаёт reunion_mm.dll для Windows серверов ReHLDS
+# =============================================================================
+
+FROM debian:12-slim AS builder
+
+LABEL maintainer="ReUnion Audit"
+LABEL description="Cross-compile ReUnion Metamod plugin for Windows (reunion_mm.dll)"
+
+# Установка MinGW-w64 и зависимостей для кросс-компиляции
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gcc \
+        g++ \
+        mingw-w64 \
+        build-essential \
+        git \
+        cmake \
+        make \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /reunion
+
+COPY . .
+
+# Создаём appversion.h (базовая версия без git)
+RUN mkdir -p reunion/version && \
+    printf '#ifndef __APPVERSION_H__\n#define __APPVERSION_H__\n\n// This file is generated automatically.\n// Don'\''t edit it.\n\n// Version defines\n#define APP_VERSION "0.2.0.0"\n#define APP_VERSION_C 0,2,0,0\n#define APP_VERSION_STRD "0.2.0.0"\n#define APP_VERSION_FLAGS 0x0L\n\n#define APP_COMMIT_DATE "Oct 31 2026"\n#define APP_COMMIT_TIME "00:00:00"\n\n#define APP_COMMIT_SHA "local"\n#define APP_COMMIT_URL "local"\n\n#endif //__APPVERSION_H__\n' > reunion/version/appversion.h
+
+# Кросс-компиляция под Windows через MinGW-w64
+# appversion.sh ожидается на уровне выше PROJECT_SOURCE_DIR, создаём там симлинк/скрипт
+RUN mkdir -p version && \
+    printf '#!/bin/bash\necho "Using pre-generated appversion.h"\nexit 0\n' > version/appversion.sh && \
+    chmod +x version/appversion.sh && \
+    rm -rf build-win && \
+    mkdir build-win && \
+    cd build-win && \
+    cmake ../reunion \
+        -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw-w64.cmake \
+        -DCMAKE_BUILD_TYPE=Release \
+    && cmake --build . -j"$(nproc)"
+
+# Подготовка артефактов
+RUN mkdir -p /publish/addons/reunion && \
+    cp build-win/reunion_mm.dll /publish/addons/reunion/reunion_mm.dll
+
+# Финальный этап
+FROM scratch
+COPY --from=builder /publish /publish

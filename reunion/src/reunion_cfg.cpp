@@ -20,10 +20,12 @@ bool Reunion_Cfg_LoadDefault()
 	}
 
 	if (!cfg->parseCfgParam()) {
+		delete cfg;
 		return false;
 	}
 
 	if (!cfg->parseCfgSection("QueryLimiterExceptIP", &CReunionConfig::parseExceptIP)) {
+		delete cfg;
 		return false;
 	}
 

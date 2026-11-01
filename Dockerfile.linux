@@ -1,0 +1,56 @@
+# =============================================================================
+# Dockerfile для сборки ReUnion под Linux (i386 .so)
+# База: Debian 12 (bookworm)
+# =============================================================================
+
+FROM debian:12-slim AS builder
+
+LABEL maintainer="ReUnion Audit"
+LABEL description="Build ReUnion Metamod plugin for Linux (reunion_mm_i386.so)"
+
+# Установка зависимостей для 32-битной сборки
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        gcc-multilib \
+        g++-multilib \
+        build-essential \
+        libc6-dev \
+        libc6-dev-i386 \
+        git \
+        cmake \
+        rsync \
+    && rm -rf /var/lib/apt/lists/*
+
+# Рабочая директория
+WORKDIR /reunion
+
+# Копируем весь репозиторий
+COPY . .
+
+# Создаём appversion.h (базовая версия без git)
+RUN mkdir -p reunion/version && \
+    printf '#ifndef __APPVERSION_H__\n#define __APPVERSION_H__\n\n// This file is generated automatically.\n// Don'\''t edit it.\n\n// Version defines\n#define APP_VERSION "0.2.0.0"\n#define APP_VERSION_C 0,2,0,0\n#define APP_VERSION_STRD "0.2.0.0"\n#define APP_VERSION_FLAGS 0x0L\n\n#define APP_COMMIT_DATE "Nov 01 2026"\n#define APP_COMMIT_TIME "00:00:00"\n\n#define APP_COMMIT_SHA "local"\n#define APP_COMMIT_URL "local"\n\n#endif //__APPVERSION_H__\n' > reunion/version/appversion.h
+
+# Создаём заглушку appversion.sh для custom target
+RUN mkdir -p version && \
+    printf '#!/bin/bash\necho "Using pre-generated appversion.h"\nexit 0\n' > version/appversion.sh && \
+    chmod +x version/appversion.sh
+
+# Сборка
+RUN rm -rf build && \
+    mkdir build && \
+    cd build && \
+    CC=gcc CXX=g++ cmake .. -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build . -j"$(nproc)"
+
+# Подготовка артефактов
+RUN mkdir -p /publish/addons/reunion /publish/addons/amxmodx/scripting /publish/src && \
+    rsync -a reunion/dist/ /publish/ --exclude=*.tpl && \
+    rsync -a reunion/src/reunion_api.h /publish/src/ && \
+    rsync -a reunion/extra/ /publish/addons/amxmodx/scripting/ && \
+    cp build/reunion/reunion_mm_i386.so /publish/addons/reunion/reunion_mm_i386.so
+
+# Финальный этап
+FROM scratch
+COPY --from=builder /publish /publish

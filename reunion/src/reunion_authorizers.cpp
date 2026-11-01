@@ -331,7 +331,7 @@ client_auth_kind CAVSMPAuthorizer::authorize(authdata_t* authdata)
 		authdata->steamId = accId;
 		authdata->authKeyKind = AK_FILEID; // file
 		authdata->authKeyLen = sizeof(uint32_t);
-		*(uint32_t *)authdata->authKey = accId;
+		memcpy(authdata->authKey, &accId, sizeof(uint32_t));
 	}
 
 	return CA_AVSMP;
@@ -368,7 +368,7 @@ client_auth_kind COldRevEmuAuthorizer::authorize(authdata_t* authdata)
 		authdata->steamId = hash << 1;
 		authdata->authKeyKind = AK_VOLUMEID;
 		authdata->authKeyLen = sizeof(uint32_t);
-		*(uint32_t *)authdata->authKey = volumeId;
+		memcpy(authdata->authKey, &volumeId, sizeof(uint32_t));
 	}
 
 	return CA_OLD_REVEMU;
@@ -409,9 +409,9 @@ client_auth_kind CSteamEmuAuthorizer::authorize(authdata_t* authdata)
 		authdata->authKeyLen = sizeof(uint32_t);
 
 		if (g_ReunionConfig->getAuthVersion() >= av_reunion2018)
-			*(uint32_t *)authdata->authKey = volumeId;
+			memcpy(authdata->authKey, &volumeId, sizeof(uint32_t));
 		else
-			*(uint32_t *)authdata->authKey = accId;
+			memcpy(authdata->authKey, &accId, sizeof(uint32_t));
 	}
 
 	return CA_STEAM_EMU;
@@ -446,7 +446,7 @@ client_auth_kind CSXEIAuthorizer::authorize(authdata_t* authdata)
 
 		if (g_ReunionConfig->getAuthVersion() >= av_reunion2018) {
 			authdata->authKeyLen = sizeof(uint32_t);
-			*(uint32_t *)authdata->authKey = sxeId;
+			memcpy(authdata->authKey, &sxeId, sizeof(uint32_t));
 		}
 		else {
 			authdata->authKeyLen = min(strlen(hid), sizeof authdata->authKey);

@@ -23,7 +23,7 @@ public:
 private:
 	std::vector<ban_t> m_bans;
 	mutable std::unordered_set<uint32_t> m_bannedIPs; // O(1) lookup cache, rebuilt on mutation
-	bool m_dirtySet = true;
+	mutable bool m_dirtySet = true;
 
 	void rebuildIPSet() const;
 };

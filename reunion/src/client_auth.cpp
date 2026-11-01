@@ -281,7 +281,7 @@ int SV_CheckProtocol_hook(IRehldsHook_SV_CheckProtocol* chain, netadr_t *adr, in
 	}
 
 	g_CurrentAuthContext->adr = adr;
-	g_CurrentAuthContext->ipaddr = *(uint32 *)&adr->ip[0];
+	memcpy(&g_CurrentAuthContext->ipaddr, adr->ip, sizeof(g_CurrentAuthContext->ipaddr));
 	g_CurrentAuthContext->protocol = nProtocol;
 
 	if (nProtocol < 47) {
@@ -333,10 +333,10 @@ int SV_CheckKeyInfo_hook(IRehldsHook_SV_CheckKeyInfo* chain, netadr_t *adr, char
 	*pAuthProtocol = PROTOCOL_STEAM; // we want to Steam_NotifyClientConnect be called for every client
 
 	strncpy(pszRaw, g_engfuncs.pfnInfoKeyValue(protinfo, "raw"), 32);
-	pszRaw[33] = '\0';
+	pszRaw[32] = '\0';
 
 	strncpy(cdkey, g_engfuncs.pfnInfoKeyValue(protinfo, "cdkey"), 32);
-	cdkey[33] = '\0';
+	cdkey[32] = '\0';
 
 	return TRUE;
 }

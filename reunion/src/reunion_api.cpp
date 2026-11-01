@@ -155,7 +155,12 @@ const char *CReunionApiImpl::GetClientAuthdataString(int index, char *data, int 
 	case CA_STEAM_EMU:
 	case CA_OLD_REVEMU:
 	case CA_AVSMP:
-		snprintf(data, maxlen, "%u", rawlen >= 4 ? *(uint32 *)raw : 0);
+		{
+			uint32_t rawVal = 0;
+			if (rawlen >= 4)
+				memcpy(&rawVal, raw, sizeof(rawVal));
+			snprintf(data, maxlen, "%u", rawVal);
+		}
 		break;
 
 	case CA_REVEMU:

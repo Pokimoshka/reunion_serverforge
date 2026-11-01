@@ -64,6 +64,10 @@ public:
 	static CReunionConfig* createDefault();
 	static FILE* open(const char* fname);
 
+	~CReunionConfig() {
+		flushCfg();
+	}
+
 	bool parseCfgParam();
 	bool parseCfgSection(const char* section, bool (CReunionConfig::*pfnCallback)(const char *param, const char *value, int cline));
 	bool parseExceptIP(const char *param, const char *value, int cline);

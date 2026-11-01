@@ -109,7 +109,7 @@ void *GetModuleHandle(const char *name)
 //static hlds_run wants to use this function
 void *Sys_GetProcAddress(const char *pModuleName, const char *pName)
 {
-	return GetProcAddress(GetModuleHandle(pModuleName), pName);
+	return (void *)GetProcAddress(GetModuleHandle(pModuleName), pName);
 }
 
 // Purpose: returns a pointer to a function, given a module
@@ -118,7 +118,7 @@ void *Sys_GetProcAddress(const char *pModuleName, const char *pName)
 // hlds_run wants to use this function
 void *Sys_GetProcAddress(void *pModuleHandle, const char *pName)
 {
-	return GetProcAddress((HMODULE)pModuleHandle, pName);
+	return (void *)GetProcAddress((HMODULE)pModuleHandle, pName);
 }
 
 // Purpose: Returns a module handle by its name.

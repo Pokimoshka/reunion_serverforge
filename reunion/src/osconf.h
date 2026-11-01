@@ -11,12 +11,22 @@
 	#include <stddef.h>
 	#define NOINLINE __declspec(noinline)
 
-	#define snprintf _snprintf
-	#define strcasecmp _stricmp
-	#define rotl _rotl
-	#define rotr _rotr
-	#define rotl64 _rotl64
-	#define rotr64 _rotr64
+	#ifdef __MINGW32__
+		// MinGW-w64: snprintf is native, use stricmp instead of MSVC-specific _stricmp
+		#define strcasecmp stricmp
+		#define rotl _rotl
+		#define rotr _rotr
+		#define rotl64 _rotl64
+		#define rotr64 _rotr64
+	#else
+		// MSVC
+		#define snprintf _snprintf
+		#define strcasecmp _stricmp
+		#define rotl _rotl
+		#define rotr _rotr
+		#define rotl64 _rotl64
+		#define rotr64 _rotr64
+	#endif
 
 #else //WIN32
 	#include <arpa/inet.h>
