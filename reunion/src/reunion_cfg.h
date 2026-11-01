@@ -52,6 +52,7 @@ private:
 	int m_floodBanTime;
 	bool m_allowSplitPackets;
 	int m_IDClientsLimit;
+	bool m_bRejectSteamPending;
 
 	size_t m_SteamIdHashSaltLen;
 	char m_SteamIdHashSalt[MAX_STEAMIDSALTLEN];
@@ -143,6 +144,10 @@ public:
 
 	int getIDClientsLimit() const {
 		return m_IDClientsLimit;
+	}
+
+	bool rejectSteamPending() const {
+		return m_bRejectSteamPending;
 	}
 };
 

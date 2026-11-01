@@ -145,6 +145,7 @@ CReunionConfig* CReunionConfig::createDefault()
 	cfg->m_floodBanTime = QUERY_FLOOD_DEFAULT_BANTIME;
 	cfg->m_allowSplitPackets = false;
 	cfg->m_IDClientsLimit = 1;
+	cfg->m_bRejectSteamPending = true;
 
 	cfg->m_SteamIdHashSaltLen = 0;
 
@@ -280,6 +281,7 @@ bool CReunionConfig::parseCfgParam()
 		REU_CFG_PARSE_BOOL("EnableSXEIdGeneration", m_bEnableSxEIds)
 		REU_CFG_PARSE_BOOL("EnableGenPrefix2", m_bEnableGenPrefix2)
 		REU_CFG_PARSE_BOOL("FixBuggedQuery", m_bFixBuggedQuery)
+		REU_CFG_PARSE_BOOL("RejectSteamPending", m_bRejectSteamPending)
 
 		REU_CFG_PARSE_IP("HLTVExcept_IP", m_HLTVExceptIP)
 		REU_CFG_PARSE_BOOL("EnableQueryLimiter", m_bEnableQueryLimiter)

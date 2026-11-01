@@ -168,6 +168,19 @@ bool Reunion_FinishClientAuth(CReunionPlayer* reunionPlr, USERID_t* userid, clie
 		authkind = CA_STEAM_PENDING;
 	}
 
+	// hard reject STEAM_ID_PENDING clients (exploit protection).
+	// Runs regardless of cid_SteamPending, so a client that somehow ends up
+	// with STEAM_ID_PENDING is always rejected when RejectSteamPending = 1.
+	if (authkind == CA_STEAM_PENDING && g_ReunionConfig->rejectSteamPending()) {
+		if (ctx->authentificatedInSteam) {
+			g_ISteamGameServer->SendUserDisconnect(userid->m_SteamID);
+			ctx->authentificatedInSteam = false;
+		}
+		Reunion_Reject_Deprecated(authkind);
+		reunionPlr->clear();
+		return false;
+	}
+
 	// add prefix
 	if (idkind == CI_UNKNOWN)
 		idkind = g_ReunionConfig->getIdGenOptions(authkind)->id_kind;
