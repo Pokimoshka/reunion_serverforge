@@ -151,7 +151,7 @@ set(REUNION_SRCS
 add_library(reunion SHARED ${appversion.sh})
 
 if (NOT TARGET appversion)
-	add_custom_target(appversion DEPENDS COMMAND "${PROJECT_SOURCE_DIR}/../version/appversion.sh" "${PROJECT_SOURCE_DIR}/..")
+	add_custom_target(appversion DEPENDS COMMAND bash "${PROJECT_SOURCE_DIR}/../version/appversion.sh" "${PROJECT_SOURCE_DIR}/..")
 endif()
 
 add_dependencies(reunion appversion)
