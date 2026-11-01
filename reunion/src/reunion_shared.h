@@ -123,26 +123,3 @@ struct ipv4_t
 
 	uint16_t port;
 };
-
-// Is the IP part of one of the reserved blocks?
-inline bool IsReservedAdr(uint32_t ipaddr)
-{
-	union IPUnion {
-		uint32_t ip;
-		uint8_t ipByte[4];
-	};
-
-	IPUnion addr{};
-	addr.ip = ipaddr;
-
-	// IP is stored little endian; for an IP of w.x.y.z, ip[3] will be w, ip[2] will be x, etc
-	if ((addr.ipByte[0] == 10) ||													// 10.x.x.x is reserved
-		(addr.ipByte[0] == 127) ||													// 127.x.x.x
-		(addr.ipByte[0] == 172 && addr.ipByte[1] >= 16 && addr.ipByte[1] <= 31) ||	// 172.16.x.x  - 172.31.x.x
-		(addr.ipByte[0] == 192 && addr.ipByte[1] == 168))							// 192.168.x.x
-	{
-		return true;
-	}
-
-	return false;
-}
