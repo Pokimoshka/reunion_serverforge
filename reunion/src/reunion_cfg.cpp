@@ -152,6 +152,7 @@ CReunionConfig* CReunionConfig::createDefault()
 	cfg->m_SteamIdHashSaltLen = 0;
 
 	memset(cfg->m_SteamIdHashSalt, 0, sizeof(cfg->m_SteamIdHashSalt));
+	strcpy(cfg->m_RevEmuCryptKey, "_YOU_SERIOUSLY_NEED_TO_GET_LAID_");
 	memset(cfg->m_AuthIdGenOptions, 0, sizeof(cfg->m_AuthIdGenOptions));
 	memset(&cfg->m_IPGenOptions, 0, sizeof(cfg->m_IPGenOptions));
 
@@ -295,6 +296,7 @@ bool CReunionConfig::parseCfgParam()
 		REU_CFG_PARSE_INT("ConnectionFloodBanTime", m_connectionFloodBanTime, int, 0, 60)
 
 		REU_CFG_PARSE_STR("SteamIdHashSalt", m_SteamIdHashSalt)
+		REU_CFG_PARSE_STR("RevEmuCryptKey", m_RevEmuCryptKey)
 
 		REU_CFG_PARSE_IDKIND("cid_HLTV", CA_HLTV)
 		REU_CFG_PARSE_IDKIND("cid_NoSteam47", CA_NO_STEAM_47)

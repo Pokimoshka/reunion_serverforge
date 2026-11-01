@@ -58,6 +58,7 @@ private:
 
 	size_t m_SteamIdHashSaltLen;
 	char m_SteamIdHashSalt[MAX_STEAMIDSALTLEN];
+	char m_RevEmuCryptKey[33];
 
 	client_id_gen_opts_t m_AuthIdGenOptions[CA_MAX];
 	client_id_gen_opts_t m_IPGenOptions;
@@ -106,6 +107,10 @@ public:
 
 	size_t getSteamIdSaltLen() const {
 		return m_SteamIdHashSaltLen;
+	}
+
+	const char* getRevEmuCryptKey() const {
+		return m_RevEmuCryptKey;
 	}
 
 	uint32 getHLTVExceptIP() const {

@@ -34,7 +34,6 @@ const char *g_AuthorizerName[] =
 
 IClientAuthorizer* g_ClientAuthorizers[MAX_CLIENT_AUTHORIZERS];
 int g_NumClientAuthorizers = 0;
-const char *g_RevEmuCryptKey = "_YOU_SERIOUSLY_NEED_TO_GET_LAID_";
 const uint32_t g_SteamEmuHashKey = 0xC9710266;
 
 static uint32_t revHash(const char* str, int n = -1)
@@ -131,7 +130,7 @@ bool RevEmu2009to2013Authorize(ticket_t* ticket, authdata_t* authdata)
 		return CA_UNKNOWN;
 
 	CRijndael hCrypt1;
-	hCrypt1.MakeKey(g_RevEmuCryptKey, CRijndael::sm_chain0, REVEMU_KEY_LEN, REVEMU_BLOCK_SIZE);
+	hCrypt1.MakeKey(g_ReunionConfig->getRevEmuCryptKey(), CRijndael::sm_chain0, REVEMU_KEY_LEN, REVEMU_BLOCK_SIZE);
 
 	char DecryptedAuthKey[REVEMU_KEY_LEN];
 	if (!hCrypt1.DecryptBlock(ticket->EncryptedKey, DecryptedAuthKey))
