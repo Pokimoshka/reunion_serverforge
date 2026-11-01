@@ -505,6 +505,11 @@ void CServerInfo::printBans()
 	m_queryBanList.print();
 }
 
+void CServerInfo::reloadConfig()
+{
+	m_queryLimiter.resetExceptIPs(g_ReunionConfig->getExceptIPs());
+}
+
 void CServerInfo::startFrame()
 {
 	m_realTime = g_RehldsFuncs->GetRealTime();

@@ -62,6 +62,12 @@ void CQueryLimiter::addExceptIPs(std::vector<ipv4_t>& exceptIPs)
 	exceptIPs.clear();
 }
 
+void CQueryLimiter::resetExceptIPs(std::vector<ipv4_t>& exceptIPs)
+{
+	m_exceptIPs.clear();
+	addExceptIPs(exceptIPs);
+}
+
 bool CQueryLimiter::allowForExcept(uint32_t ip, uint16_t port) const
 {
 	for (const ipv4_t &e : m_exceptIPs)
